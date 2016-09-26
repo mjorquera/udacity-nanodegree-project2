@@ -32,6 +32,14 @@
     "gulp-if": "^2.0.1",
     "gulp-sass": "^2.3.2",
     "gulp-uglify": "^2.0.0",
-    "gulp-useref": "^3.1.0"
+    "gulp-useref": "^3.1.0",
+    "gulp-load-plugins": "^0.10.0",
+    "gulp-util": "^3.0.6",
+    "babelify": "^6.2.0",
+    "browserify": "^11.0.1",
+    "watchify": "^3.3.1",
+    "lodash": "^3.10.1",
+    "handlebars": "^3.0.3",
+    "hbsfy": "^2.2.1"
   }
 }
