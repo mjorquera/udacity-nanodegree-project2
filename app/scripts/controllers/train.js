@@ -38,19 +38,21 @@ angular.module('publicTransportationApp')
     };
 
     vm.selectDeparture = function(){
-      console.log(vm.departure);
-      var marker = vm.markers.filter(function ( obj ) {
+      if(vm.departure_id !== null)
+      {
+          var marker = vm.markers.filter(function ( obj ) {
             return obj.id === vm.departure_id;
-        })[0];
-        
-      if(typeof marker !== "undefined"){
-        marker.focus = true;
+          })[0];
+          
+        if(typeof marker !== "undefined"){
+          marker.focus = true;
+        };
+
+        vm.departure = vm.departure_stations.filter(function ( obj ) {
+              return obj.station_code === vm.departure_id;
+          })[0];
       };
 
-      vm.departure = vm.departure_stations.filter(function ( obj ) {
-            return obj.station_code === vm.departure_id;
-        })[0];
-      
       if (vm.departure_id !== null && vm.arrival_id !== vm.departure_id) {
         vm.routeInfo = null;
         station.getRouteInfo(vm.departure_id, vm.arrival_id).then(function(data){
