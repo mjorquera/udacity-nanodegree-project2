@@ -16,20 +16,23 @@ this.addEventListener('install', function(event) {
         '/bower_components/leaflet/dist/leaflet-src.js',
         '/bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js',
         '/bower_components/angular-ui-select/dist/select.js',
-        '/bower_components/angular-fontawesome/dist/angular-fontawesome.js'
+        '/bower_components/angular-fontawesome/dist/angular-fontawesome.js',
+        '/bower_components/bootstrap/dist/css/bootstrap.css',
+        '/bower_components/leaflet/dist/leaflet.css',
+        '/bower_components/angular-ui-select/dist/select.css'
       ]);
     })
   );
 });
 
 this.addEventListener('fetch', function(event) {
-  console.log(event);
   event.respondWith(
     caches.match(event.request).then(function(resp) {
-      console.log(resp);
       return resp || fetch(event.request).then(function(response) {
         caches.open('v1').then(function(cache) {
-          cache.put(event.request, response.clone());
+          cache.put(event.request, response.clone().catch(function(data){
+            console.log(data);
+          }));
         });
         return response;
       });
