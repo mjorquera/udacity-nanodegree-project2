@@ -80,3 +80,15 @@ body {
     border-bottom: 0;
   }
 }
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+.opacity {
+  opacity: 0.2;
+}
+
+.opacity-4x {
+  opacity: 0.8;
+}

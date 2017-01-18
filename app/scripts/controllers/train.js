@@ -17,6 +17,26 @@ angular.module('publicTransportationApp')
       zoom: 11
     };
 
+    vm.getStatusClass = function(status){
+      switch (status) {
+        case "LATE":
+          return "label-danger";
+          break;
+        case "ON TIME":
+          return "label-success";
+          break;
+        case "STARTS HERE":
+          return "label-primary";
+          break;
+        case "EARLY":
+          return "label-success";
+          break;
+        default:
+          return "label-default";
+          break;
+      }
+    };
+
     vm.selectDeparture = function(){
       console.log(vm.departure);
       var marker = vm.markers.filter(function ( obj ) {
@@ -31,7 +51,7 @@ angular.module('publicTransportationApp')
             return obj.station_code === vm.departure_id;
         })[0];
       
-      if (vm.arrival_id !== null && vm.departure_id !== null && vm.arrival_id !== vm.departure_id) {
+      if (vm.departure_id !== null && vm.arrival_id !== vm.departure_id) {
         station.getRouteInfo(vm.departure_id, vm.arrival_id).then(function(data){
           console.log(data);
           vm.routeInfo = data;

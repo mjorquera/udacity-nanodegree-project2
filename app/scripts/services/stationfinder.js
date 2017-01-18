@@ -18,7 +18,12 @@ angular.module('publicTransportationApp')
     };
 
     this.getRouteInfo = function(departure, arrival) {
-      var urlRouteInfo = base_url + departure + "/live.json?app_id=" + app_id + "&app_key=" + app_key  + "&calling_at=" + arrival + "&darwin=false&train_status=passenger";
+      var urlRouteInfo = base_url + departure + "/live.json?app_id=" + app_id + "&app_key=" + app_key;
+      if (arrival !== null) {
+        urlRouteInfo += "&calling_at=" + arrival;
+      }
+      urlRouteInfo += "&darwin=false&train_status=passenger";
+      
       return $.get( urlRouteInfo );
     };
   });

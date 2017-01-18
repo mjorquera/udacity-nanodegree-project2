@@ -16,7 +16,7 @@
                 </select>
             </div>
         </form>
-        <leaflet center="train.mapcenter" markers="train.markers" path="train.paths" height="480px" style="width:100%"></leaflet>
+        <leaflet class="hidden-xs" center="train.mapcenter" markers="train.markers" path="train.paths" height="480px" style="width:100%"></leaflet>
     </div>
     <div class="col-sm-6">
         <h4>From: <b>{{train.departure.name}} {{train.departure_id}}</b></h5>
@@ -27,22 +27,35 @@
                 <tr>
                     <th>Train</th>
                     <th>Platform</th>
-                    <th>Departure Time</th>
                     <th>Arrival Time</th>
-                    <th>Travel Time</th>
+                    <th>Departure Time</th>
+                    <th>Arrives in</th>
+                    <th>Final Destination</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="schedule in train.routeInfo.departures.all | orderBy: 'expected_departure_time'">
-                    <td><fa name="train"></fa> {{schedule.train_uid}}</td>
+                    <td><span class="label label-success"><fa name="train"></fa> {{schedule.train_uid}}</span></td>
                     <td class="text-center"><span class="badge">{{schedule.platform}}</span></td>
-                    <td>{{schedule.aimed_departure_time}}</td>
-                    <td>{{schedule.aimed_arrival_time}}</td>
-                    <td>{{schedule.aimed_arrival_time - schedule.aimed_departure_time}}</td>
+                    <td class="text-center">
+                        <span ng-show="schedule.aimed_arrival_time == null">-</span>
+                        <div ng-hide="schedule.aimed_arrival_time == null">
+                        {{schedule.aimed_arrival_time}} <br />
+                        <small class="opacity-4x">({{schedule.expected_arrival_time}})</small>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        {{schedule.aimed_departure_time}} <br />
+                        <small class="opacity-4x">({{schedule.expected_departure_time}})</small>
+                    </td>
+                    <td class="text-center"><span ng-show="schedule.best_arrival_estimate_mins != null">{{schedule.best_arrival_estimate_mins}} mins</span></td>
+                    <td class="text-center">{{schedule.destination_name}}</td>
+                    <td class="text-center"><span class="label" ng-class="train.getStatusClass(schedule.status)">{{schedule.status}}</span></td>
                 </tr>
             </tbody>
         </table>
-        <div ng-if="train.routeInfo.departures.all.length == 0"  class="text-center">
+        <div ng-if="train.routeInfo.departures.all.length == 0"  class="text-center" ng-cloak>
             <p>
                 <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> No route info available between <b>{{train.departure.name}}</b> and <b>{{train.arrival.name}}</b>.
             </p>
