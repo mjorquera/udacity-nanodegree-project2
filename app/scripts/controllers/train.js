@@ -52,6 +52,7 @@ angular.module('publicTransportationApp')
         })[0];
       
       if (vm.departure_id !== null && vm.arrival_id !== vm.departure_id) {
+        vm.routeInfo = null;
         station.getRouteInfo(vm.departure_id, vm.arrival_id).then(function(data){
           console.log(data);
           vm.routeInfo = data;
@@ -73,6 +74,7 @@ angular.module('publicTransportationApp')
         })[0];
       
       if (vm.arrival_id !== null && vm.departure_id !== null && vm.arrival_id !== vm.departure_id) {
+        vm.routeInfo = null;
         station.getRouteInfo(vm.departure_id, vm.arrival_id).then(function(data){
           console.log(data);
           vm.routeInfo = data;

@@ -11,7 +11,7 @@
             <div class="form-group">
                 <label>Arrival Station</label>
                 <select class="form-control" ng-model="train.arrival_id"  ng-change="train.selectArrival()">
-                    <option value="" disabled selected>(Select Arrival Station)</option>
+                    <option value="" selected>(Select Arrival Station)</option>
                     <option ng-repeat="option in train.arrival_stations | orderBy: 'name'" ng-value="option.station_code">{{option.name}}</option>
                 </select>
             </div>
@@ -35,6 +35,7 @@
                 </tr>
             </thead>
             <tbody>
+                <tr ng-show="train.departure_id != null && train.routeInfo.departures.all == null"><td colspan="7" class="text-center"><fa name="refresh" spin size="2"></fa></td></tr>
                 <tr ng-repeat="schedule in train.routeInfo.departures.all | orderBy: 'expected_departure_time'">
                     <td><span class="label label-success"><fa name="train"></fa> {{schedule.train_uid}}</span></td>
                     <td class="text-center"><span class="badge">{{schedule.platform}}</span></td>
