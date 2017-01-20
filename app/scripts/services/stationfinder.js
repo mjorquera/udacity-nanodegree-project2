@@ -14,7 +14,6 @@ angular.module('publicTransportationApp')
     var base_url = "https://transportapi.com/v3/uk/train/station/";
 
     this.getCachedStations = function(){
-      console.log('cached');
       return $indexedDB.openStore('stations', function(store){
          return store.getAll();
       });
@@ -22,12 +21,6 @@ angular.module('publicTransportationApp')
 
     this.getStations = function() {
       return $.get( '/data/stations.json' );
-    };
-
-    this.getCachedRouteInfo = function(departure){
-      return $indexedDB.openStore('trains', function(store){
-         return store.find(departure);
-      });
     };
 
     this.getRouteInfo = function(departure, arrival) {
@@ -40,5 +33,17 @@ angular.module('publicTransportationApp')
       return $.get( urlRouteInfo );
     };
 
+    this.saveTrainCache = function(train_data){
+      return $indexedDB.openStore('trains', function(store){
+          store.find(train_data.station_code).then(function(result){
+            if (result){
+              store.delete(train_data.station_code);
+            }
+            return store.insert(train_data);
+          }).catch(function(){
+            return store.insert(train_data);
+          });
+        });
+    };
 
   }]);

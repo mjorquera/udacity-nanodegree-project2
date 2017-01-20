@@ -28,7 +28,6 @@ angular
         objStore.createIndex('code_idx', 'station_code', {unique: true});
 
         db.createObjectStore('trains', {keyPath: 'station_code'});
-
       });
   }])
   .run(['$rootScope', function($rootScope){

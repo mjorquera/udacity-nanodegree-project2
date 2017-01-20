@@ -22,6 +22,8 @@
         <h4>From: <b>{{train.departure.name}} {{train.departure_id}}</b></h5>
         <h4>To: <b>{{train.arrival.name}} {{train.arrival_id}}</b></h5>
 
+        <p class="text-right" ng-show="train.offline"><label class="label label-warning">Offline</label><small> data from: <b>{{train.routeInfo.request_time | date:"MM/dd/yyyy 'at' h:mma"}}</b></small></p>
+        <p class="text-right" ng-show="!train.offline"><label class="label label-success">Online</label></p>
         <table class="table table-hover table-responsive table-condensed">
             <thead>
                 <tr>

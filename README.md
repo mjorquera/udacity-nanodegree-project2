@@ -47,3 +47,4 @@ If there is no train it will show up a message.
 * Map by Leaflet & OpenStreetMap: http://tombatossals.github.io/angular-leaflet-directive/#!/
 * Angular Font Awesome: https://github.com/picardy/angular-fontawesome
 * UK Train API: http://www.transportapi.com/
+* Angular indexed db: https://github.com/bramski/angular-indexedDB

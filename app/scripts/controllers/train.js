@@ -55,21 +55,28 @@ angular.module('publicTransportationApp')
 
       if (vm.departure_id !== null && vm.arrival_id !== vm.departure_id) {
         vm.routeInfo = null;
-        station.getCachedRouteInfo(vm.departure_id).then(function(data){
-          console.log('Cached Data: ' + data)
-          vm.routeInfo = data;
-          return station.getRouteInfo(vm.departure_id, vm.arrival_id)
-        }).then(function(data){
-          console.log('New data avaliable: ' + data);
-          vm.routeInfo = data;
 
-          //Save the info on the indexeddb
-          $indexedDB.openStore('trains',function(store){
-            store.upsert(data).then(function(e){
-              console.log(e);
-            })
+        $indexedDB.openStore('trains',function(store){
+          store.find(vm.departure_id).then(function(result){
+              if(result){
+                console.log('Cached Data: ' + result)
+                vm.routeInfo = result;
+                vm.offline = true;
+              }               
+              return station.getRouteInfo(vm.departure_id, vm.arrival_id);
+          }).catch(function(){
+            return station.getRouteInfo(vm.departure_id, vm.arrival_id);
+          }).then(function(onlineData){
+              if(onlineData){
+                console.log('New data avaliable: ' + onlineData);
+                vm.routeInfo = onlineData;
+                vm.offline = false;
+                station.saveTrainCache(onlineData);
+              };
+          }).catch(function(){
+            console.log("Cannot retrieve online data.");
           });
-        })
+        });
       };
     };
 
@@ -104,9 +111,14 @@ angular.module('publicTransportationApp')
       $.each(data, function (key, value) {
         //Insert on indexeddb
         $indexedDB.openStore('stations',function(store){
-          store.insert(value).catch(function(){
-            console.log('Entry already on db.');
+          store.findBy('code_idx',value.station_code).then(function(result){
+            if(!result){
+              store.upsert(value).catch(function(e){
+                console.log(e);
+              });
+            }
           });
+
         });
 
         var marker = {
