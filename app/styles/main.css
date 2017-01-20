@@ -92,3 +92,12 @@ body {
 .opacity-4x {
   opacity: 0.8;
 }
+
+.margin-top {
+  margin-top: 20px;
+}
+
+
+.margin-top-2x {
+  margin-top: 40px;
+}

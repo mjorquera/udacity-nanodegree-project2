@@ -8,7 +8,7 @@
  * Controller of the publicTransportationApp
  */
 angular.module('publicTransportationApp')
-  .controller('TrainCtrl', ['stationFinder', function (station) {
+  .controller('TrainCtrl', ['stationFinder','$indexedDB', function (station, $indexedDB) {
     var vm = this;
 
     vm.mapcenter = {
@@ -55,10 +55,21 @@ angular.module('publicTransportationApp')
 
       if (vm.departure_id !== null && vm.arrival_id !== vm.departure_id) {
         vm.routeInfo = null;
-        station.getRouteInfo(vm.departure_id, vm.arrival_id).then(function(data){
-          console.log(data);
+        station.getCachedRouteInfo(vm.departure_id).then(function(data){
+          console.log('Cached Data: ' + data)
           vm.routeInfo = data;
-        });
+          return station.getRouteInfo(vm.departure_id, vm.arrival_id)
+        }).then(function(data){
+          console.log('New data avaliable: ' + data);
+          vm.routeInfo = data;
+
+          //Save the info on the indexeddb
+          $indexedDB.openStore('trains',function(store){
+            store.upsert(data).then(function(e){
+              console.log(e);
+            })
+          });
+        })
       };
     };
 
@@ -84,13 +95,20 @@ angular.module('publicTransportationApp')
       };
     };
 
-    station.getStations().then(function(data){
+    var updateStations = function(data){
       vm.stations = data;
       var stations_markers = [];
       vm.departure_stations = data;
       vm.arrival_stations = data;
 
       $.each(data, function (key, value) {
+        //Insert on indexeddb
+        $indexedDB.openStore('stations',function(store){
+          store.insert(value).catch(function(){
+            console.log('Entry already on db.');
+          });
+        });
+
         var marker = {
           id: value.station_code,
           lat: value.latitude,
@@ -104,8 +122,14 @@ angular.module('publicTransportationApp')
         stations_markers.push(marker);
       });
 
-      angular.extend(vm,{
-        markers: stations_markers
-          });
+      vm.markers = stations_markers;
+    };
+
+    station.getCachedStations().then(function(data){
+      updateStations(data);
+      return station.getStations();
+    }).then(function(data){
+      updateStations(data);
     });
+
   }]);
